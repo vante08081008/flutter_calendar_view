@@ -123,6 +123,9 @@ class DayView<T> extends StatefulWidget {
   /// This method will be called when user taps on event tile.
   final CellTapCallback<T>? onEventTap;
 
+  /// Hide header
+  final bool hideHeader;
+
   /// Main widget for day view.
   const DayView({
     Key? key,
@@ -148,6 +151,7 @@ class DayView<T> extends StatefulWidget {
     this.verticalLineOffset = 10,
     this.backgroundColor = Colors.white,
     this.onEventTap,
+    this.hideHeader = false,
   })  : assert((timeLineOffset) >= 0,
             "timeLineOffset must be greater than or equal to 0"),
         super(key: key);
@@ -235,7 +239,7 @@ class DayViewState<T> extends State<DayView<T>> {
     _width = widget.width ?? MediaQuery.of(context).size.width;
     assert(_width != 0, "Calendar width can not be 0.");
 
-    _timeLineWidth = widget.timeLineWidth ?? _width * 0.13;
+    _timeLineWidth = widget.timeLineWidth ?? _width * 0.18;
     assert(_timeLineWidth != 0, "Time line width can not be 0.");
 
     _liveTimeIndicatorSettings = widget.liveTimeIndicatorSettings ??
@@ -279,7 +283,7 @@ class DayViewState<T> extends State<DayView<T>> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _dayTitleBuilder(_currentDate),
+              if (widget.hideHeader == false) _dayTitleBuilder(_currentDate),
               Expanded(
                 child: SingleChildScrollView(
                   child: SizedBox(
