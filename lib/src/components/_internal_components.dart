@@ -185,6 +185,10 @@ class EventGenerator<T> extends StatelessWidget {
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onTileTap;
 
+  final Color tileColor;
+  final Function(int hourIndex, Object?)? onDragAccept;
+  final ScrollController? scrollController;
+
   /// A widget that display event tiles in day/week view.
   const EventGenerator({
     Key? key,
@@ -196,6 +200,9 @@ class EventGenerator<T> extends StatelessWidget {
     required this.eventTileBuilder,
     required this.date,
     required this.onTileTap,
+    this.tileColor = Colors.black12,
+    this.onDragAccept,
+    this.scrollController,
   }) : super(key: key);
 
   /// Arrange events and returns list of [Widget] that displays event
@@ -208,26 +215,43 @@ class EventGenerator<T> extends StatelessWidget {
       width: width,
       heightPerMinute: heightPerMinute,
     );
-
     return List.generate(events.length, (index) {
       return Positioned(
         top: events[index].top,
         bottom: events[index].bottom,
         left: events[index].left,
         right: events[index].right,
-        child: GestureDetector(
-          onTap: () => onTileTap?.call(events[index].events, date),
-          child: eventTileBuilder(
-            date,
-            events[index].events,
-            Rect.fromLTWH(
-                events[index].left,
-                events[index].top,
-                width - events[index].right - events[index].left,
-                height - events[index].bottom - events[index].top),
-            events[index].startDuration ?? DateTime.now(),
-            events[index].endDuration ?? DateTime.now(),
+        child: LongPressDraggable(
+          onDragStarted: () {},
+          onDragEnd: (details) {},
+          child: GestureDetector(
+            onTap: () => onTileTap?.call(events[index].events, date),
+            child: eventTileBuilder(
+              date,
+              events[index].events,
+              Rect.fromLTWH(
+                  events[index].left,
+                  events[index].top,
+                  width - events[index].right - events[index].left,
+                  height - events[index].bottom - events[index].top),
+              events[index].startDuration ?? DateTime.now(),
+              events[index].endDuration ?? DateTime.now(),
+            ),
           ),
+          feedback: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: tileColor,
+            ),
+            width: width,
+            height: heightPerMinute * 60,
+          ),
+          childWhenDragging: Container(
+            width: width,
+            height: heightPerMinute * 60,
+            color: Colors.black.withOpacity(0.05),
+          ),
+          data: events[index].events[0],
         ),
       );
     });
@@ -239,7 +263,36 @@ class EventGenerator<T> extends StatelessWidget {
       height: height,
       width: width,
       child: Stack(
-        children: _generateEvents(),
+        children: [
+          Stack(
+            children: _generateEvents(),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (int i = 0; i < (Constants.hoursADay * 2); i++)
+                DragTarget(
+                  builder: (context, candidateData, rejectedData) {
+                    return Container(
+                      width: width,
+                      height: heightPerMinute * 30,
+                      color: (candidateData.isNotEmpty)
+                          ? Colors.black.withOpacity(0.05)
+                          : null,
+                    );
+                  },
+                  onWillAccept: (data) {
+                    return true;
+                  },
+                  onAccept: (data) {
+                    if (onDragAccept != null) {
+                      onDragAccept!(i, data);
+                    }
+                  },
+                ),
+            ],
+          )
+        ],
       ),
     );
   }

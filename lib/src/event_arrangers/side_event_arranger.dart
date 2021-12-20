@@ -126,15 +126,20 @@ class SideEventArranger<T> extends EventArranger<T> {
     for (final event in events) {
       final startTime = event.startTime ?? DateTime.now();
       final endTime = event.endTime ?? startTime;
+      /*
       assert(
           !(endTime.getTotalMinutes <= startTime.getTotalMinutes),
           "Assertion fail for event: \n$event\n"
           "startDate must be less than endDate.\n"
           "This error occurs when you does not provide startDate or endDate in "
           "CalendarEventDate or provided endDate occurs before startDate.");
-
+*/
       final start = startTime.getTotalMinutes;
-      final end = endTime.getTotalMinutes;
+      var end = endTime.getTotalMinutes;
+      if (end <= start) {
+        end = start + 1;
+      }
+
       int i;
 
       /// Get position where we can add start duration

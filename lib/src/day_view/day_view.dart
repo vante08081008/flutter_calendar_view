@@ -126,6 +126,9 @@ class DayView<T> extends StatefulWidget {
   /// Hide header
   final bool hideHeader;
 
+  final Color tileColor;
+  final Function(int hourIndex, Object?)? onDragAccept;
+
   /// Main widget for day view.
   const DayView({
     Key? key,
@@ -152,6 +155,8 @@ class DayView<T> extends StatefulWidget {
     this.backgroundColor = Colors.white,
     this.onEventTap,
     this.hideHeader = false,
+    this.tileColor = Colors.black12,
+    this.onDragAccept,
   })  : assert((timeLineOffset) >= 0,
             "timeLineOffset must be greater than or equal to 0"),
         super(key: key);
@@ -317,6 +322,8 @@ class DayViewState<T> extends State<DayView<T>> {
                           controller: _controller,
                           hourHeight: _hourHeight,
                           eventArranger: _eventArranger,
+                          tileColor: widget.tileColor,
+                          onDragAccept: widget.onDragAccept,
                         );
                       },
                     ),

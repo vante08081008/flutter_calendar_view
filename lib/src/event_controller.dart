@@ -56,6 +56,7 @@ class EventController<T> extends ChangeNotifier {
     for (final e in _events) {
       if (e.year == event.date.year) {
         e.removeEvent(event);
+        _eventList.remove(event);
         notifyListeners();
         break;
       }
@@ -204,6 +205,7 @@ class _MonthEvent<T> {
     for (final e in _events) {
       if (e == event) {
         _events.remove(e);
+        return;
       }
     }
   }

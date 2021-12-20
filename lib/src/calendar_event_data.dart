@@ -38,6 +38,11 @@ class CalendarEventData<T> {
 
   final DateTime? _endDate;
 
+  final String? id;
+  final String? menuName;
+  final String? customerName;
+  final bool? purchased;
+
   /// Stores all the events on [date]
   const CalendarEventData({
     required this.title,
@@ -48,6 +53,10 @@ class CalendarEventData<T> {
     this.endTime,
     DateTime? endDate,
     required this.date,
+    this.id,
+    this.menuName,
+    this.customerName,
+    this.purchased,
   }) : _endDate = endDate;
 
   DateTime get endDate => _endDate ?? date;
@@ -60,6 +69,10 @@ class CalendarEventData<T> {
         "title": title,
         "description": description,
         "endDate": endDate,
+        "menuName": menuName,
+        "customerName": customerName,
+        "purchased": purchased,
+        "id": id,
       };
 
   @override

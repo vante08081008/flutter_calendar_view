@@ -65,6 +65,10 @@ class InternalDayViewPage<T> extends StatelessWidget {
   /// Called when user taps on event tile.
   final CellTapCallback<T>? onTileTap;
 
+  final Color tileColor;
+  final Function(int hourIndex, Object?)? onDragAccept;
+  final ScrollController? scrollController;
+
   /// Defines a single day page.
   const InternalDayViewPage({
     Key? key,
@@ -85,6 +89,9 @@ class InternalDayViewPage<T> extends StatelessWidget {
     required this.eventArranger,
     required this.verticalLineOffset,
     required this.onTileTap,
+    this.tileColor = Colors.black12,
+    this.onDragAccept,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -127,6 +134,8 @@ class InternalDayViewPage<T> extends StatelessWidget {
                   timeLineWidth -
                   hourIndicatorSettings.offset -
                   verticalLineOffset,
+              tileColor: tileColor,
+              onDragAccept: onDragAccept,
             ),
           ),
           TimeLine(
