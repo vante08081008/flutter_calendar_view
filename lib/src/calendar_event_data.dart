@@ -85,6 +85,7 @@ class CalendarEventData<T> {
         endDate.compareWithoutTime(other.endDate) &&
         event == other.event &&
         title == other.title &&
+        id == other.id &&
         description == other.description;
   }
 
